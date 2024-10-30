@@ -10,16 +10,18 @@ import { Wallet, TrendingUp, User, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { ethers } from "ethers"
 import abi from "@/lib/PredictionMarket.json"
+import { useStore } from "@/store"
 
 export default function MainComp() {
   const [kamalaStake, setKamalaStake] = useState("")
   const [trumpStake, setTrumpStake] = useState("")
-  const [isConnected, setIsConnected] = useState(false)
+  // const [isConnected, setIsConnected] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isElectionOver, setIsElectionOver] = useState(false)
-  const [account, setAccount] = useState("")
-  const [contract, setContract] = useState(null)
-  const [provider, setProvider] = useState(null)
+  // const [account, setAccount] = useState("")
+  // const [contract, setContract] = useState(null)
+  // const [provider, setProvider] = useState(null)
+  const {provider, setProvider, contract, setContract, account, setAccount, isConnected, setIsConnected} = useStore()
   const [marketStats, setMarketStats] = useState({
     totalVolume: "0",
     totalBets: "0",
@@ -39,6 +41,12 @@ export default function MainComp() {
   const CONTRACT_ABI = abi.abi
   const ORACLE_ADDRESS = "0xF2de1E3000fbD29cD227aFc3B86721987B4AF701"
   const ELECTION_DATE = new Date('2024-11-05T00:00:00Z')
+
+  useEffect(() => {
+    if(Object.keys(account).length === 0) {
+      alert("Please connect your wallet for getting started")
+    }
+  }, [])
 
   useEffect(() => {
     setMounted(true)
@@ -82,6 +90,8 @@ export default function MainComp() {
       const address = await signer.getAddress()
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer)
       console.log("Contract connected:", contract);
+      console.log("Type of contract:", typeof contract, "Type of provider:", typeof provider, "Type of signer:", typeof signer, "Type of address:", typeof address);
+      
       
 
       setProvider(provider)
@@ -244,11 +254,11 @@ export default function MainComp() {
           <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-300 sm:mt-4">
             Place your bets on who will win the 2024 US Presidential Election
           </p>
-          {account.toLowerCase() === ORACLE_ADDRESS.toLowerCase() && (
-            <Button onClick={endElection} className="mt-4" disabled={isElectionOver}>
-              End Election
-            </Button>
-          )}
+            {account.toLowerCase && account.toLowerCase() === ORACLE_ADDRESS.toLowerCase() && (
+              <Button onClick={endElection} className="mt-4" disabled={isElectionOver}>
+                End Election
+              </Button>
+            )}
         </div>
 
         {isConnected && (
