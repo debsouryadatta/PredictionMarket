@@ -48,3 +48,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 7. `pnpm i ethers` - in the client dir
 8. Creating the MainComp component which contains most of the ui
 9. Connecting the smart contract to the client using ethers.js and also used next-themes for the dark mode
+10. Creating a landing page with shadcn and framer-motion - `pnpm i framer-motion`
+11. Using zuztand for global state management - `pnpm i zustand`
